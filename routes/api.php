@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,3 +22,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register' , [RegisterController::class , 'register']);
 Route::post('/login' , [RegisterController::class , 'login']);
+
+
+Route::post('/doctor', [DoctorController::class, 'store']);
+Route::get('/doctor', [DoctorController::class, 'show']);
+Route::put('/doctor/{id}', [DoctorController::class, 'update']);
+Route::delete('/doctor/{id}', [DoctorController::class, 'delete']);

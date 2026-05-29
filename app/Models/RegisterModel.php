@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
+
 
 class RegisterModel extends Model
 {
@@ -16,4 +18,7 @@ class RegisterModel extends Model
         'name' , 'email' , 'password', 'phone_number' , 'role', 'token'
     ];
     
+    public function doctor(){
+        return $this->hasOne(DoctorModel::class);
+    }
 }
