@@ -44,7 +44,7 @@ class DoctorController extends Controller
     }
 
     public function delete($id){
-        $validate = DoctorModel::find($id);
+        $validate = DoctorModel::with('user')->find($id);
         if (!$validate) {
             return response()->json(['message' => 'user not found'], 404);
         }
@@ -53,9 +53,24 @@ class DoctorController extends Controller
         return response()->json(['message' => 'user deleted successfully']);
     }
 
-    public function show(){
+    public function index(){
          $validate = DoctorModel::with('user')->get();
         return response()->json(['message' => 'User retrieved successfully', 'doctor' => $validate]);
+    }
+
+    public function show($id){
+        $doctor = DoctorModel::with('user')->find($id);
+
+        if (!$doctor) {
+            return response()->json([
+                'message' => 'Doctor not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Doctor retrieved successfully',
+            'doctor' => $doctor,
+        ]);
     }
 
     public function update(Request $request, $id){

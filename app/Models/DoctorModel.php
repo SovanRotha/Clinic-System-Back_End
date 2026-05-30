@@ -29,4 +29,16 @@ class DoctorModel extends Model
     {
         return $this->hasMany(AppointmentModel::class, 'doctor_id');
     }
+
+    public function consultation()
+    {
+        return $this->hasMany(ConsultationModel::class, 'doctor_id');
+    }
+
+    public function prescription()
+    {
+        return $this->hasMany(PrescriptionModel::class);
+    }
+
+    
 }

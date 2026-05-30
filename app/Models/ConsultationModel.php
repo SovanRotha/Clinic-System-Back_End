@@ -5,20 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AppointmentModel extends Model
+class ConsultationModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'appointment';
+    protected $table = 'consultation';
 
     protected $fillable = [
+        'appointment_id',
         'patient_id',
         'doctor_id',
-        'appointment_date',
-        'appointment_time',
-        'reason',
-        'status',
+        'symptoms',
+        'diagnosis',
+        'note',
     ];
+
+    public function appointment()
+    {
+        return $this->belongsTo(AppointmentModel::class, 'appointment_id');
+    }
 
     public function patient()
     {
@@ -30,14 +35,8 @@ class AppointmentModel extends Model
         return $this->belongsTo(DoctorModel::class, 'doctor_id');
     }
 
-    public function consultation()
+    public function prescription()
     {
-        return $this->hasOne(ConsultationModel::class);
+        return $this->hasMany(PrescriptionModel::class);
     }
-
-    public function bill()
-    {
-        return $this->hasOne(BillModel::class);
-    }
-    
 }

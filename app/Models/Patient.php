@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Patient extends Model
 {
     protected $table = 'patients';
+    
     use HasFactory;
     protected $fillable = [
         'user_id',
@@ -17,7 +18,7 @@ class Patient extends Model
         'address',
         'blood_group'
     ];
-    public function register()
+    public function user()
     {
         return $this->belongsTo(RegisterModel::class, 'user_id');
     }
@@ -26,4 +27,19 @@ class Patient extends Model
     {
         return $this->hasMany(AppointmentModel::class, 'patient_id');
     }
+
+    public function bill(){
+        return $this->hasMany(BillModel::class);
+    }
+
+    public function consultation()
+    {
+        return $this->hasMany(ConsultationModel::class, 'patient_id');
+    }
+
+    public function prescription()
+    {
+        return $this->hasMany(PrescriptionModel::class);    
+    }
+
 }
