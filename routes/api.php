@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RegisterController;
@@ -29,12 +30,15 @@ Route::post('/doctor', [DoctorController::class, 'store']);
 Route::get('/doctor', [DoctorController::class, 'show']);
 Route::put('/doctor/{id}', [DoctorController::class, 'update']);
 Route::delete('/doctor/{id}', [DoctorController::class, 'delete']);
-Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/login', [RegisterController::class, 'login']);
-
 
 Route::post('/patients', [PatientController::class, 'store']);
 Route::get('/patients', [PatientController::class, 'show']);
 Route::get('/patients/{id}', [PatientController::class, 'showById']);
 Route::put('/patients/{id}', [PatientController::class, 'update']);
 Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+
+Route::post('/appointment' , [AppointmentController::class, 'store']);
+Route::get('/appointment', [AppointmentController::class, 'index']);
+Route::delete('/appointment/{id}' , [AppointmentController::class, 'delete']);
+Route::put('/appointment/{id}', [AppointmentController::class, 'update']);
+Route::get('/appointment/{id}', [AppointmentController::class, 'show']);

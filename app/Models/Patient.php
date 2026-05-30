@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Register;
 
 class Patient extends Model
 {
@@ -20,6 +19,11 @@ class Patient extends Model
     ];
     public function register()
     {
-        return $this->belongsTo(RegisterModel::class);
+        return $this->belongsTo(RegisterModel::class, 'user_id');
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(AppointmentModel::class, 'patient_id');
     }
 }
