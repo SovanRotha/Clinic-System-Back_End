@@ -15,10 +15,19 @@ class RegisterModel extends Model
     protected $table = 'register';
 
     protected $fillable = [
-        'name' , 'email' , 'password', 'phone_number' , 'role', 'token'
+        'name',
+        'email',
+        'password',
+        'phone_number',
+        'role',
+        'token'
     ];
     
     public function doctor(){
         return $this->hasOne(DoctorModel::class);
+    }
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
     }
 }
