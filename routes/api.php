@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,3 +30,10 @@ Route::get('/patients', [PatientController::class, 'show']);
 Route::get('/patients/{id}', [PatientController::class, 'showById']);
 Route::put('/patients/{id}', [PatientController::class, 'update']);
 Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+
+
+
+Route::post('/doctor', [DoctorController::class, 'store']);
+Route::get('/doctor', [DoctorController::class, 'show']);
+Route::put('/doctor/{id}', [DoctorController::class, 'update']);
+Route::delete('/doctor/{id}', [DoctorController::class, 'delete']);
