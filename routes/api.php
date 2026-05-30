@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,5 +20,12 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('/register' , [RegisterController::class , 'register']);
-Route::post('/login' , [RegisterController::class , 'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/login', [RegisterController::class, 'login']);
+
+
+Route::post('/patients', [PatientController::class, 'store']);
+Route::get('/patients', [PatientController::class, 'show']);
+Route::get('/patients/{id}', [PatientController::class, 'showById']);
+Route::put('/patients/{id}', [PatientController::class, 'update']);
+Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
