@@ -29,6 +29,14 @@ class BillController extends Controller
             ], 404);
         }
 
+        $user = auth()->user();
+
+        if ($user->role === 'patient' && $bill->patient_id !== $user->patient_id) {
+        return response()->json([
+            'message' => 'Unauthorized'
+        ], 403);
+    }
+
         return response()->json([
             'message' => 'Bill retrieved successfully',
             'data' => $bill

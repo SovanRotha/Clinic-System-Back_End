@@ -24,42 +24,111 @@ use App\Http\Controllers\ConsultationController;
 //     return $request->user();
 // });
 
+// Protected routes by role
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+   Route::post('/doctor', [DoctorController::class, 'store']);
+   Route::put('/doctor/{id}', [DoctorController::class, 'update']);
+   Route::delete('/doctor/{id}', [DoctorController::class, 'delete']);
+   Route::get('/doctor', [DoctorController::class, 'index']);
+   Route::get('/doctor/{id}', [DoctorController::class, 'show']);
+
+   Route::put('/patients/{id}', [PatientController::class, 'update']);
+   Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+   Route::post('/patients', [PatientController::class, 'store']);
+   Route::get('/patients', [PatientController::class, 'show']);
+   Route::get('/patients/{id}', [PatientController::class, 'showById']);
+
+   Route::delete('/appointment/{id}' , [AppointmentController::class, 'delete']);
+   Route::put('/appointment/{id}', [AppointmentController::class, 'update']);
+   Route::post('/appointment' , [AppointmentController::class, 'store']);
+   Route::get('/appointment', [AppointmentController::class, 'index']);
+   Route::get('/appointment/{id}', [AppointmentController::class, 'show']);
+
+   Route::delete('/consultation/{id}', [ConsultationController::class, 'delete']);
+   Route::put('/consultation/{id}', [ConsultationController::class, 'update']);
+   Route::post('/consultation' , [ConsultationController::class, 'store']);
+   Route::get('/consultation' , [ConsultationController::class, 'index']);
+   Route::get('/consultation/{id}', [ConsultationController::class, 'show']);
+
+   Route::delete('/prescription/{id}', [PrescriptionController::class, 'delete']);
+   Route::put('/prescription/{id}', [PrescriptionController::class, 'update']);
+   Route::post('/prescription' , [PrescriptionController::class,'store']);
+   Route::get('/prescription', [PrescriptionController::class, 'index']);
+   Route::get('/prescription/{id}', [PrescriptionController::class, 'show']);
+
+   Route::put('/bill/{id}' , [BillController::class, 'update']);
+   Route::delete('/bill/{id}' , [BillController::class, 'delete']);
+   Route::post('/bill', [BillController::class, 'store']);
+   Route::get('/bill' , [BillController::class, 'index']);
+   Route::get('/bill/{id}', [BillController::class, 'show']);
+});
+
+Route::middleware(['auth:sanctum', 'role:doctor,admin'])->group(function () {
+    
+   Route::get('/patients', [PatientController::class, 'show']);
+   Route::get('/patients/{id}', [PatientController::class, 'showById']);
+
+   Route::put('/appointment/{id}', [AppointmentController::class, 'update']);
+   Route::get('/appointment', [AppointmentController::class, 'index']);
+   Route::get('/appointment/{id}', [AppointmentController::class, 'show']);
+       
+   Route::put('/consultation/{id}', [ConsultationController::class, 'update']);
+   Route::post('/consultation' , [ConsultationController::class, 'store']);
+   Route::get('/consultation' , [ConsultationController::class, 'index']);
+   Route::get('/consultation/{id}', [ConsultationController::class, 'show']);
+   
+   Route::put('/prescription/{id}', [PrescriptionController::class, 'update']);
+   Route::post('/prescription' , [PrescriptionController::class,'store']);
+   Route::get('/prescription', [PrescriptionController::class, 'index']);
+   Route::get('/prescription/{id}', [PrescriptionController::class, 'show']);
+});
+
+Route::middleware(['auth:sanctum', 'role:receptionist'])->group(function () {
+   Route::get('/doctor', [DoctorController::class, 'index']);
+   Route::get('/doctor/{id}', [DoctorController::class, 'show']);
+
+   Route::put('/patients/{id}', [PatientController::class, 'update']);
+   Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
+   Route::post('/patients', [PatientController::class, 'store']);
+   Route::get('/patients', [PatientController::class, 'show']);
+   Route::get('/patients/{id}', [PatientController::class, 'showById']);
+   
+   Route::delete('/appointment/{id}' , [AppointmentController::class, 'delete']);
+   Route::put('/appointment/{id}', [AppointmentController::class, 'update']);
+   Route::post('/appointment' , [AppointmentController::class, 'store']);
+   Route::get('/appointment', [AppointmentController::class, 'index']);
+   Route::get('/appointment/{id}', [AppointmentController::class, 'show']);
+
+   Route::put('/bill/{id}' , [BillController::class, 'update']);
+   Route::delete('/bill/{id}' , [BillController::class, 'delete']);
+   Route::post('/bill', [BillController::class, 'store']);
+   Route::get('/bill' , [BillController::class, 'index']);
+   Route::get('/bill/{id}', [BillController::class, 'show']);
+
+
+});
+
+Route::middleware(['auth:sanctum', 'role:patient'])->group(function(){
+
+   Route::get('/patients/{id}', [PatientController::class, 'showById']);
+   Route::put('/patients/{id}', [PatientController::class, 'update']);
+   
+   Route::get('/appointment/{id}', [AppointmentController::class, 'show']);
+
+   Route::get('/consultation/{id}', [ConsultationController::class, 'show']);
+
+   Route::get('/prescription/{id}', [PrescriptionController::class, 'show']);
+
+   Route::get('/bill/{id}', [BillController::class, 'show']);
+});
+
 Route::post('/register' , [RegisterController::class , 'register']);
 Route::post('/login' , [RegisterController::class , 'login']);
 
 
-Route::post('/doctor', [DoctorController::class, 'store']);
-Route::get('/doctor', [DoctorController::class, 'index']);
-Route::put('/doctor/{id}', [DoctorController::class, 'update']);
-Route::delete('/doctor/{id}', [DoctorController::class, 'delete']);
-Route::get('/doctor/{id}', [DoctorController::class, 'show']);
 
-Route::post('/patients', [PatientController::class, 'store']);
-Route::get('/patients', [PatientController::class, 'show']);
-Route::get('/patients/{id}', [PatientController::class, 'showById']);
-Route::put('/patients/{id}', [PatientController::class, 'update']);
-Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
 
-Route::post('/appointment' , [AppointmentController::class, 'store']);
-Route::get('/appointment', [AppointmentController::class, 'index']);
-Route::delete('/appointment/{id}' , [AppointmentController::class, 'delete']);
-Route::put('/appointment/{id}', [AppointmentController::class, 'update']);
-Route::get('/appointment/{id}', [AppointmentController::class, 'show']);
 
-Route::post('/consultation' , [ConsultationController::class, 'store']);
-Route::get('/consultation' , [ConsultationController::class, 'index']);
-Route::delete('/consultation/{id}', [ConsultationController::class, 'delete']);
-Route::put('/consultation/{id}', [ConsultationController::class, 'update']);
-Route::get('/consultation/{id}', [ConsultationController::class, 'show']);
 
-Route::post('/prescription' , [PrescriptionController::class,'store']);
-Route::get('/prescription', [PrescriptionController::class, 'index']);
-Route::delete('/prescription/{id}', [PrescriptionController::class, 'delete']);
-Route::put('/prescription/{id}', [PrescriptionController::class, 'update']);
-Route::get('/prescription/{id}', [PrescriptionController::class, 'show']);
 
-Route::post('/bill' , [BillController::class, 'store']);
-Route::get('/bill' , [BillController::class, 'index']);
-Route::put('/bill/{id}' , [BillController::class, 'update']);
-Route::delete('/bill/{id}' , [BillController::class, 'delete']);
-Route::get('/bill/{id}', [BillController::class, 'show']);
+
