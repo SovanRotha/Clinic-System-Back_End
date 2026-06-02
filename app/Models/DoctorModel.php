@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DoctorModel extends Model
 {
@@ -21,7 +20,25 @@ class DoctorModel extends Model
         "status"
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(RegisterModel::class, 'user_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(AppointmentModel::class, 'doctor_id');
+    }
+
+    public function consultation()
+    {
+        return $this->hasMany(ConsultationModel::class, 'doctor_id');
+    }
+
+    public function prescription()
+    {
+        return $this->hasMany(PrescriptionModel::class);
+    }
+
+    
 }

@@ -36,7 +36,7 @@ class PatientController extends Controller
 
     public function show()
     {
-        $patients = Patient::all();
+        $patients = Patient::with('user')->get();
 
         return response()->json([
             'message' => 'All patients retrieved successfully',
@@ -46,7 +46,7 @@ class PatientController extends Controller
 
     public function showById($id)
     {
-        $patient = Patient::find($id);
+        $patient = Patient::with('user')->find($id);
 
         if (!$patient) {
             return response()->json([
