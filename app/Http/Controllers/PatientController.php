@@ -44,7 +44,7 @@ class PatientController extends Controller
         ]);
     }
 
-    public function showById($id)
+    public function showById(int $id)
     {
         $patient = Patient::with('user')->find($id);
 
@@ -60,7 +60,7 @@ class PatientController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $patient = Patient::find($id);
 
@@ -87,7 +87,7 @@ class PatientController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $patient = Patient::find($id);
 
