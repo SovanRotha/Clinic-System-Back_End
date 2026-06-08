@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DoctorModel;
+use App\Models\Patient;
 use Illuminate\Http\Request;
 use App\Models\PrescriptionModel;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class PrescriptionController extends Controller
 {
@@ -113,6 +116,30 @@ class PrescriptionController extends Controller
 
         return response()->json([
             'message' => 'Prescription deleted successfully'
+        ]);
+    }
+    public function myPrescriptions(Request $request)
+    {
+        $patient = Patient::where('user_id', $request->user()->id)->first();
+
+        $prescriptions = PrescriptionModel::with(['consultation', 'doctor', 'patient'])
+            ->where('patient_id', $patient->id)
+            ->get();
+
+        return response()->json([
+            'message' => 'My prescriptions retrieved successfully',
+            'data' => $prescriptions
+        ]);
+    }
+
+    public function PrescriptionDoctor(Request $request){
+        $doctor = DoctorModel::where('user_id' , $request->user()->id)->first();
+
+        $prescription = PrescriptionModel::with(['doctor', 'consultation', 'patient'])->where('doctor_id', $doctor->id)->get();
+
+        return response()->json([
+            'message' => 'My prescriptions retrieved successfully',
+            'data' => $prescription
         ]);
     }
 }

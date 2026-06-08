@@ -10,8 +10,12 @@ class DoctorController extends Controller
 {
     //
 
-    public function store(Request $request){
-        $validate = $request->validate([
+    public function store(Request $request)
+    {
+        try{
+
+        
+        $validated = $request->validate([
             'user_id' => 'required|integer|exists:register,id',
             'doctor_code' => 'required|string',
             'working_day' => 'required|string',
@@ -20,42 +24,44 @@ class DoctorController extends Controller
             'status' => 'required|string',
         ]);
 
-         $user = RegisterModel::find($validate['user_id']);
-
-        if ($user->role !== 'doctor') {
-        return response()->json([
-            'message' => 'Only users with role doctor can be assigned'
-        ], 403);
-    }
-
-        $doctor = DoctorModel::create([
-            'user_id' => $validate['user_id'],
-            'doctor_code' => $validate['doctor_code'],
-            'working_day' => $validate['working_day'],
-            'start_time' => $validate['start_time'],
-            'end_time' => $validate['end_time'],
-            'status' => $validate['status'],
-        ]);
-
-        return response()->json([
-            'message' => 'Successfully store data',
-            'doctor' => $doctor,
-        ]);
-    }
-
-    public function delete($id){
-        $validate = DoctorModel::with('user')->find($id);
-        if (!$validate) {
-            return response()->json(['message' => 'user not found'], 404);
+        $user = RegisterModel::find($validated['user_id']);
+        if ($user && $user->role !== 'doctor' && $user->role !== 'admin') {
+            return response()->json([
+                'message' => 'Only users with role doctor or admin can be assigned',
+            ], 403);
         }
 
-        $validate->delete();
-        return response()->json(['message' => 'user deleted successfully']);
+        $doctor = DoctorModel::create($validated);
+
+        return response()->json([
+            'message' => 'Doctor created successfully',
+            'doctor' => $doctor,
+        ], 201);} catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error creating doctor',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function index(){
-         $validate = DoctorModel::with('user')->get();
-        return response()->json(['message' => 'User retrieved successfully', 'doctor' => $validate]);
+    public function delete($id)
+    {
+        $doctor = DoctorModel::with('user')->find($id);
+        if (!$doctor) {
+            return response()->json(['message' => 'Doctor not found'], 404);
+        }
+
+        $doctor->delete();
+        return response()->json(['message' => 'Doctor deleted successfully']);
+    }
+
+    public function index()
+    {
+        $doctors = DoctorModel::with('user')->get();
+        return response()->json([
+            'message' => 'Doctors retrieved successfully',
+            'doctors' => $doctors,
+        ]);
     }
 
     public function show($id){
@@ -73,11 +79,11 @@ class DoctorController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id){
-         $validate = DoctorModel::find($id);
+    public function update(Request $request, $id)
+    {
+        $doctor = DoctorModel::find($id);
 
-
-        if (!$validate) {
+        if (!$doctor) {
             return response()->json(['message' => 'Doctor not found'], 404);
         }
 
@@ -90,8 +96,32 @@ class DoctorController extends Controller
             'status' => 'required|string',
         ]);
 
-        $validate->update($validated);
+        $user = RegisterModel::find($validated['user_id']);
+        if ($user && $user->role !== 'doctor' && $user->role !== 'admin') {
+            return response()->json([
+                'message' => 'Only users with role doctor or admin can be assigned',
+            ], 403);
+        }
 
-        return response()->json(['message' => 'User updated successfully', 'doctor' => $validate]);
+        $doctor->update($validated);
+
+        return response()->json([
+            'message' => 'Doctor updated successfully',
+            'doctor' => $doctor,
+        ]);
+    }
+
+    public function getDoctor($userId){
+        $doctor = DoctorModel::with('user')
+        ->where('user_id', $userId)
+        ->first();
+
+    if (!$doctor) {
+        return response()->json([
+            'message' => 'Patient not found'
+        ], 404);
+    }
+
+    return response()->json($doctor);
     }
 }

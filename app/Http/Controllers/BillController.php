@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\BillModel;
+use App\Models\Patient;
 
 class BillController extends Controller
 {
@@ -31,11 +32,15 @@ class BillController extends Controller
 
         $user = auth()->user();
 
-        if ($user->role === 'patient' && $bill->patient_id !== $user->patient_id) {
-        return response()->json([
-            'message' => 'Unauthorized'
-        ], 403);
-    }
+        if ($user->role === 'patient') {
+            $patient = $user->patient;
+
+            if (!$patient || $bill->patient_id !== $patient->id) {
+                return response()->json([
+                    'message' => 'Unauthorized'
+                ], 403);
+            }
+        }
 
         return response()->json([
             'message' => 'Bill retrieved successfully',
@@ -124,5 +129,32 @@ class BillController extends Controller
         return response()->json([
             'message' => 'Bill deleted successfully'
         ]);
+    }
+    public function myBills(Request $request)
+    {
+        try {
+            $user = $request->user();
+            $patient = $user->patient ?? Patient::where('user_id', $user->id)->first();
+
+            if (!$patient) {
+                return response()->json([
+                    'message' => 'Patient record not found for the current user'
+                ], 404);
+            }
+
+            $bills = BillModel::with(['patient', 'appointment'])
+                ->where('patient_id', $patient->id)
+                ->get();
+
+            return response()->json([
+                'message' => 'My bills retrieved successfully',
+                'data' => $bills
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error retrieving bills',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

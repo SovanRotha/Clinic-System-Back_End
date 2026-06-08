@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ConsultationModel;
+use App\Models\DoctorModel;
+use App\Models\Patient;
 
 class ConsultationController extends Controller
 {
@@ -105,6 +107,29 @@ class ConsultationController extends Controller
 
         return response()->json([
             'message' => 'Consultation deleted successfully'
+        ]);
+    }
+    public function myConsultations(Request $request)
+    {
+        $patient = Patient::where('user_id', $request->user()->id)->first();
+
+        $consultations = ConsultationModel::with(['appointment', 'doctor'])
+            ->where('patient_id', $patient->id)
+            ->get();
+        return response()->json([
+            'message' => 'Consultations retrieved successfully',
+            'data' => $consultations
+        ]);
+    }
+
+    public function ConsultationDoctor(Request $request){
+        $doctor = DoctorModel::where('user_id', $request->user()->id)->first();
+
+        $consultation = ConsultationModel::with(['doctor', 'appointment'])->where('doctor_id', $doctor->id)->get();
+
+        return response()->json([
+            'message' => 'Consultations retrieved successfully',
+            'data' => $consultation
         ]);
     }
 }

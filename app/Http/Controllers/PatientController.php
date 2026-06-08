@@ -13,12 +13,13 @@ class PatientController extends Controller
         $validate = $request->validate([
             'user_id' => 'required|exists:register,id',
             'patient_code' => 'required|string|max:250',
-            'gender' => 'required|string',
-            'date_of_birth' => 'required|date',
-            'address' => 'required|string',
-            'blood_group' => 'required|string'
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'address' => 'nullable|string',
+            'blood_group' => 'nullable|string'
 
         ]);
+
 
         $patient = Patient::create([
             'user_id' => $validate['user_id'],
@@ -71,12 +72,10 @@ class PatientController extends Controller
         }
 
         $validate = $request->validate([
-            'user_id' => 'required|exists:register,id',
-            'patient_code' => 'required|string|max:250',
-            'gender' => 'required|string',
-            'date_of_birth' => 'required|date',
-            'address' => 'required|string',
-            'blood_group' => 'required|string'
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'address' => 'nullable|string',
+            'blood_group' => 'nullable|string'
         ]);
 
         $patient->update($validate);
@@ -103,4 +102,18 @@ class PatientController extends Controller
             'message' => 'Patient deleted successfully'
         ]);
     }
+    public function getProfile($userId)
+{
+    $patient = Patient::with('user')
+        ->where('user_id', $userId)
+        ->first();
+
+    if (!$patient) {
+        return response()->json([
+            'message' => 'Patient not found'
+        ], 404);
+    }
+
+    return response()->json($patient);
+}
 }

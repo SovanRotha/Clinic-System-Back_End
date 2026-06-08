@@ -3,12 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
-
-class RegisterModel extends Model
+class RegisterModel extends Authenticatable
 {
     use HasFactory, HasApiTokens;
 
@@ -18,16 +16,18 @@ class RegisterModel extends Model
         'name',
         'email',
         'password',
+        'profile',
         'phone_number',
         'role',
-        'token'
+        'token',
     ];
     
     public function doctor(){
-        return $this->hasOne(DoctorModel::class);
+        return $this->hasOne(DoctorModel::class, 'user_id');
     }
+
     public function patient()
     {
-        return $this->hasOne(Patient::class);
+        return $this->hasOne(Patient::class, 'user_id');
     }
 }

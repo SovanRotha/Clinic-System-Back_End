@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AppointmentModel;
-
+use App\Models\DoctorModel;
+use App\Models\Patient;
 
 class AppointmentController extends Controller
 {
@@ -39,66 +40,104 @@ class AppointmentController extends Controller
     // 🔵 STORE (CREATE)
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'patient_id' => 'required|exists:patients,id',
-            'doctor_id' => 'required|exists:doctor,id',
-            'appointment_date' => 'required|date',
-            'appointment_time' => 'required|date_format:H:i',
-            'reason' => 'nullable|string',
-            'status' => 'nullable|in:pending,confirmed,completed,cancelled',
-        ]);
+        try {
+            $validated = $request->validate([
+                'patient_id' => 'required|exists:patients,id',
+                'doctor_id' => 'required|exists:doctor,id',
+                'appointment_date' => 'required|date',
+                'appointment_time' => 'required|date_format:H:i',
+                'reason' => 'nullable|string',
+                'status' => 'nullable|in:pending,confirmed,completed,cancelled',
+            ]);
 
-        $appointment = AppointmentModel::create($validated);
+            $appointment = AppointmentModel::create($validated);
 
-        return response()->json([
-            'message' => 'Appointment created successfully',
-            'data' => $appointment
-        ], 201);
+            return response()->json([
+                'message' => 'Appointment created successfully',
+                'data' => $appointment
+            ], 201);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to create appointment',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     // 🔵 UPDATE
     public function update(Request $request, $id)
     {
-        $appointment = AppointmentModel::with(['patient', 'doctor'])->find($id);
+        try {
+            $appointment = AppointmentModel::with(['patient', 'doctor'])->find($id);
 
-        if (!$appointment) {
+            if (!$appointment) {
+                return response()->json([
+                    'message' => 'Appointment not found'
+                ], 404);
+            }
+
+            $validated = $request->validate([
+                'patient_id' => 'sometimes|exists:patients,id',
+                'doctor_id' => 'sometimes|exists:doctor,id',
+                'appointment_date' => 'sometimes|date',
+                'appointment_time' => 'sometimes|date_format:H:i',
+                'reason' => 'nullable|string',
+                'status' => 'nullable|in:pending,confirmed,completed,cancelled',
+            ]);
+
+            $appointment->update($validated);
+
             return response()->json([
-                'message' => 'Appointment not found'
-            ], 404);
+                'message' => 'Appointment updated successfully',
+                'data' => $appointment
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update appointment',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $validated = $request->validate([
-            'patient_id' => 'sometimes|exists:patients,id',
-            'doctor_id' => 'sometimes|exists:doctor,id',
-            'appointment_date' => 'sometimes|date',
-            'appointment_time' => 'sometimes|date_format:H:i',
-            'reason' => 'nullable|string',
-            'status' => 'nullable|in:pending,confirmed,completed,cancelled',
-        ]);
-
-        $appointment->update($validated);
-
-        return response()->json([
-            'message' => 'Appointment updated successfully',
-            'data' => $appointment
-        ]);
     }
 
     // 🔵 DELETE
     public function delete($id)
     {
-        $appointment = AppointmentModel::find($id);
+        try {
+            $appointment = AppointmentModel::find($id);
 
-        if (!$appointment) {
+            if (!$appointment) {
+                return response()->json([
+                    'message' => 'Appointment not found'
+                ], 404);
+            }
+
+            $appointment->delete();
+
             return response()->json([
-                'message' => 'Appointment not found'
-            ], 404);
+                'message' => 'Appointment deleted successfully'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to delete appointment',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $appointment->delete();
-
-        return response()->json([
-            'message' => 'Appointment deleted successfully'
-        ]);
     }
+    public function myAppointments(Request $request)
+    {
+    $patient = Patient::where('user_id', $request->user()->id)->first();
+
+    return AppointmentModel::with(['patient', 'doctor'])
+        ->where('patient_id', $patient->id)
+        ->get();
+    }
+
+    public function appointmentDoctor(Request $request){
+
+        $doctor = DoctorModel::where('user_id', $request->user()->id)->first();
+
+        return AppointmentModel::with(['doctor' , 'patient'])->where('doctor_id', $doctor->id)->get();
+    }
+    
+
 }
