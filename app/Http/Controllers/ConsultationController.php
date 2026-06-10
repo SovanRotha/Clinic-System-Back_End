@@ -113,7 +113,7 @@ class ConsultationController extends Controller
     {
         $patient = Patient::where('user_id', $request->user()->id)->first();
 
-        $consultations = ConsultationModel::with(['appointment', 'doctor'])
+        $consultations = ConsultationModel::with(['appointment', 'doctor', 'patient'])
             ->where('patient_id', $patient->id)
             ->get();
         return response()->json([
@@ -125,7 +125,7 @@ class ConsultationController extends Controller
     public function ConsultationDoctor(Request $request){
         $doctor = DoctorModel::where('user_id', $request->user()->id)->first();
 
-        $consultation = ConsultationModel::with(['doctor', 'appointment'])->where('doctor_id', $doctor->id)->get();
+        $consultation = ConsultationModel::with(['doctor', 'appointment', 'patient'])->where('doctor_id', $doctor->id)->get();
 
         return response()->json([
             'message' => 'Consultations retrieved successfully',

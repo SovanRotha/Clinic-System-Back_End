@@ -125,6 +125,7 @@ class AppointmentController extends Controller
     }
     public function myAppointments(Request $request)
     {
+        
     $patient = Patient::where('user_id', $request->user()->id)->first();
 
     return AppointmentModel::with(['patient', 'doctor'])
@@ -133,10 +134,17 @@ class AppointmentController extends Controller
     }
 
     public function appointmentDoctor(Request $request){
+        try{
 
         $doctor = DoctorModel::where('user_id', $request->user()->id)->first();
 
         return AppointmentModel::with(['doctor' , 'patient'])->where('doctor_id', $doctor->id)->get();
+        }catch(\Throwable $e){
+            return response()->json([
+                'message' => 'Failed to retrieve appointments for doctor',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
     
 

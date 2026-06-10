@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
             //
-            $table->string('patinet_code')->nullable()->change();
+            $table->string('patient_code')->nullable()->change();
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
             //
-                $table->string('patinet_code')->nullable(false)->change();
+                $table->string('patient_code')->nullable(false)->change();
         });
     }
 };

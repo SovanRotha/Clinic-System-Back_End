@@ -61,6 +61,12 @@ class RegisterController extends Controller
                     'patient_code' => 'PAT-' . $user->id,
                 ]);
             }
+            elseif($role === 'doctor'){
+                    $user->doctor()->create([
+                        'doctor_code' => 'DOC-' . $user->id,
+                    ]);
+                }
+            
             
 
             return response()->json([
@@ -71,6 +77,84 @@ class RegisterController extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Registration failed',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function index()
+    {
+        $users = RegisterModel::all();
+        return response()->json([
+            'message' => 'Users retrieved successfully',
+            'user' => $users,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = RegisterModel::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'User retrieved successfully',
+            'user' => $user,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = RegisterModel::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string|max:250',
+            'email' => 'sometimes|required|email|max:250|unique:register,email,' . $user->id,
+            'password' => 'sometimes|required|string|min:6',
+            'phone_number' => 'sometimes|required|string',
+            'role' => 'sometimes|nullable|string'
+        ]);
+
+        if (isset($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user,
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        $user = RegisterModel::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        try {
+            $user->delete();
+            return response()->json([
+                'message' => 'User deleted successfully'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to delete user',
                 'error' => $e->getMessage(),
             ], 500);
         }

@@ -26,6 +26,12 @@ use App\Http\Controllers\ConsultationController;
 
 // Protected routes by role
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+   Route::get('/users', [RegisterController::class, 'index']);
+   Route::get('/users/{id}', [RegisterController::class, 'show']);
+   Route::put('/users/{id}', [RegisterController::class, 'update']);
+   Route::delete('/users/{id}', [RegisterController::class, 'destroy']);
+   
+
    Route::post('/doctor', [DoctorController::class, 'store']);
    Route::put('/doctor/{id}', [DoctorController::class, 'update']);
    Route::delete('/doctor/{id}', [DoctorController::class, 'delete']);
