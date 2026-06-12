@@ -29,5 +29,9 @@ class BillModel extends Model
     {
         return $this->belongsTo(AppointmentModel::class, 'appointment_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+    }
 
 }

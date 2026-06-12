@@ -12,7 +12,7 @@ class AppointmentController extends Controller
     // 🔵 SHOW ALL APPOINTMENTS
     public function index()
     {
-        $appointments = AppointmentModel::with(['patient', 'doctor'])->get();
+        $appointments = AppointmentModel::with(['patient', 'doctor' , 'user'])->get();
 
         return response()->json([
             'message' => 'All appointments retrieved',
@@ -23,7 +23,7 @@ class AppointmentController extends Controller
     // 🔵 SHOW BY ID
     public function show($id)
     {
-        $appointment = AppointmentModel::with(['patient', 'doctor'])->find($id);
+        $appointment = AppointmentModel::with(['patient', 'doctor', 'user'])->find($id);
 
         if (!$appointment) {
             return response()->json([
@@ -68,7 +68,7 @@ class AppointmentController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $appointment = AppointmentModel::with(['patient', 'doctor'])->find($id);
+            $appointment = AppointmentModel::with(['patient', 'doctor', 'user'])->find($id);
 
             if (!$appointment) {
                 return response()->json([
@@ -128,7 +128,7 @@ class AppointmentController extends Controller
         
     $patient = Patient::where('user_id', $request->user()->id)->first();
 
-    return AppointmentModel::with(['patient', 'doctor'])
+    return AppointmentModel::with(['patient', 'doctor', 'user'])
         ->where('patient_id', $patient->id)
         ->get();
     }
@@ -138,7 +138,7 @@ class AppointmentController extends Controller
 
         $doctor = DoctorModel::where('user_id', $request->user()->id)->first();
 
-        return AppointmentModel::with(['doctor' , 'patient'])->where('doctor_id', $doctor->id)->get();
+        return AppointmentModel::with(['doctor' , 'patient', 'user'])->where('doctor_id', $doctor->id)->get();
         }catch(\Throwable $e){
             return response()->json([
                 'message' => 'Failed to retrieve appointments for doctor',

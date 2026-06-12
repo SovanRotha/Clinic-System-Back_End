@@ -16,7 +16,8 @@ class PrescriptionController extends Controller
         $prescriptions = PrescriptionModel::with([
             'consultation',
             'patient',
-            'doctor'
+            'doctor',
+            'user'
         ])->get();
 
         return response()->json([
@@ -31,7 +32,8 @@ class PrescriptionController extends Controller
         $prescription = PrescriptionModel::with([
             'consultation',
             'patient',
-            'doctor'
+            'doctor',
+            'user'
         ])->find($id);
 
         if (!$prescription) {
@@ -122,7 +124,7 @@ class PrescriptionController extends Controller
     {
         $patient = Patient::where('user_id', $request->user()->id)->first();
 
-        $prescriptions = PrescriptionModel::with(['consultation', 'doctor', 'patient'])
+        $prescriptions = PrescriptionModel::with(['consultation', 'doctor', 'patient', 'user'])
             ->where('patient_id', $patient->id)
             ->get();
 
@@ -135,7 +137,7 @@ class PrescriptionController extends Controller
     public function PrescriptionDoctor(Request $request){
         $doctor = DoctorModel::where('user_id' , $request->user()->id)->first();
 
-        $prescription = PrescriptionModel::with(['doctor', 'consultation', 'patient'])->where('doctor_id', $doctor->id)->get();
+        $prescription = PrescriptionModel::with(['doctor', 'consultation', 'patient', 'user'])->where('doctor_id', $doctor->id)->get();
 
         return response()->json([
             'message' => 'My prescriptions retrieved successfully',

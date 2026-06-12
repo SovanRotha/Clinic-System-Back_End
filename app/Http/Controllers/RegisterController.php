@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RegisterModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class RegisterController extends Controller
 {
@@ -84,7 +85,8 @@ class RegisterController extends Controller
 
     public function index()
     {
-        $users = RegisterModel::all();
+        $users = RegisterModel::orderby('id' , 'asc')->get();
+
         return response()->json([
             'message' => 'Users retrieved successfully',
             'user' => $users,

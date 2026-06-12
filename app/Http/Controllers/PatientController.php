@@ -37,7 +37,7 @@ class PatientController extends Controller
 
     public function show()
     {
-        $patients = Patient::with('user')->get();
+        $patients = Patient::with('user')->orderby('id','asc')->get();
 
         return response()->json([
             'message' => 'All patients retrieved successfully',

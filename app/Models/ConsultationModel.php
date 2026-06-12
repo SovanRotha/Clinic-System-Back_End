@@ -25,6 +25,11 @@ class ConsultationModel extends Model
         return $this->belongsTo(AppointmentModel::class, 'appointment_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+    }
+    
     public function patient()
     {
         return $this->belongsTo(Patient::class, 'patient_id');

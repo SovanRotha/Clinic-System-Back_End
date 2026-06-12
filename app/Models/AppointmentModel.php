@@ -34,7 +34,10 @@ class AppointmentModel extends Model
     {
         return $this->hasOne(ConsultationModel::class);
     }
-
+    public function user()
+    {
+        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+    }
     public function bill()
     {
         return $this->hasOne(BillModel::class);

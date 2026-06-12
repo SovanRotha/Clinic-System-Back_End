@@ -30,4 +30,8 @@ class RegisterModel extends Authenticatable
     {
         return $this->hasOne(Patient::class, 'user_id');
     }
+    public function appointments()
+    {
+        return $this->hasMany(AppointmentModel::class, 'patient_id');
+    }
 }

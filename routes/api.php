@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
    Route::get('/doctor', [DoctorController::class, 'index']);
    Route::get('/doctor/{id}', [DoctorController::class, 'show']);
    Route::get('/getDoctor/{userId}' , [DoctorController::class, 'getDoctor']);
+   Route::get('/doctor-users', [DoctorController::class, 'doctorUsers']);
 
    Route::put('/patients/{id}', [PatientController::class, 'update']);
    Route::delete('/patients/{id}', [PatientController::class, 'destroy']);
@@ -109,6 +110,7 @@ Route::middleware(['auth:sanctum', 'role:receptionist, admin'])->group(function 
    Route::get('/doctor', [DoctorController::class, 'index']);
    Route::get('/doctor/{id}', [DoctorController::class, 'show']);
    Route::get('/getDoctor/{userId}' , [DoctorController::class, 'getDoctor']);
+   Route::get('/doctor-users', [DoctorController::class, 'doctorUsers']);
 
    Route::put('/patients/{id}', [PatientController::class, 'update']);
    Route::delete('/patients/{id}', [PatientController::class, 'destroy']);

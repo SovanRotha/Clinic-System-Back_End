@@ -18,6 +18,7 @@ class DoctorController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|integer|exists:register,id',
             'doctor_code' => 'required|string',
+            'specialization' => 'nullable|string',
             'working_day' => 'required|string',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
@@ -57,7 +58,7 @@ class DoctorController extends Controller
 
     public function index()
     {
-        $doctors = DoctorModel::with('user')->get();
+        $doctors = DoctorModel::with('user')->orderBy('id', 'asc')->get();
         return response()->json([
             'message' => 'Doctors retrieved successfully',
             'doctors' => $doctors,
@@ -90,6 +91,7 @@ class DoctorController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|integer|exists:register,id',
             'doctor_code' => 'required|string',
+            'specialization' => 'nullable|string',
             'working_day' => 'required|string',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i',
@@ -118,10 +120,17 @@ class DoctorController extends Controller
 
     if (!$doctor) {
         return response()->json([
-            'message' => 'Patient not found'
+            'message' => 'Doctor not found'
         ], 404);
     }
 
     return response()->json($doctor);
     }
+
+    public function doctorUsers()
+{
+    $users = RegisterModel::where('role', 'doctor')->get();
+
+    return response()->json($users);
+}
 }

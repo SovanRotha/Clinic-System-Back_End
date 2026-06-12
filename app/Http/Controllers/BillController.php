@@ -11,7 +11,7 @@ class BillController extends Controller
     // GET ALL BILLS
     public function index()
     {
-        $bills = BillModel::with(['patient', 'appointment'])->get();
+        $bills = BillModel::with(['patient', 'appointment', 'user'])->get();
 
         return response()->json([
             'message' => 'All bills retrieved successfully',
@@ -22,7 +22,7 @@ class BillController extends Controller
     // GET BY ID
     public function show($id)
     {
-        $bill = BillModel::with(['patient', 'appointment'])->find($id);
+        $bill = BillModel::with(['patient', 'appointment', 'user'])->find($id);
 
         if (!$bill) {
             return response()->json([
@@ -142,7 +142,7 @@ class BillController extends Controller
                 ], 404);
             }
 
-            $bills = BillModel::with(['patient', 'appointment'])
+            $bills = BillModel::with(['patient', 'appointment', 'user'])
                 ->where('patient_id', $patient->id)
                 ->get();
 

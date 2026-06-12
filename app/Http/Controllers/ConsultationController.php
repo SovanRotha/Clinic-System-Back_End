@@ -12,7 +12,7 @@ class ConsultationController extends Controller
     //
     public function index()
     {
-        $consultations = ConsultationModel::with(['appointment' , 'doctor' , 'patient'])->get();
+        $consultations = ConsultationModel::with(['appointment' , 'doctor' , 'patient', 'user'])->get();
 
         return response()->json([
             'message' => 'All consultations retrieved successfully',
@@ -23,7 +23,7 @@ class ConsultationController extends Controller
     // Get consultation by ID
     public function show($id)
     {
-        $consultation = ConsultationModel::with(['appointment', 'doctor' , 'patient'])->find($id);
+        $consultation = ConsultationModel::with(['appointment', 'doctor' , 'patient', 'user'])->find($id);
 
         if (!$consultation) {
             return response()->json([
@@ -113,7 +113,7 @@ class ConsultationController extends Controller
     {
         $patient = Patient::where('user_id', $request->user()->id)->first();
 
-        $consultations = ConsultationModel::with(['appointment', 'doctor', 'patient'])
+        $consultations = ConsultationModel::with(['appointment', 'doctor', 'patient', 'user'])
             ->where('patient_id', $patient->id)
             ->get();
         return response()->json([
@@ -125,7 +125,7 @@ class ConsultationController extends Controller
     public function ConsultationDoctor(Request $request){
         $doctor = DoctorModel::where('user_id', $request->user()->id)->first();
 
-        $consultation = ConsultationModel::with(['doctor', 'appointment', 'patient'])->where('doctor_id', $doctor->id)->get();
+        $consultation = ConsultationModel::with(['doctor', 'appointment', 'patient', 'user'])->where('doctor_id', $doctor->id)->get();
 
         return response()->json([
             'message' => 'Consultations retrieved successfully',
