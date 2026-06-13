@@ -55,6 +55,7 @@ class BillController extends Controller
             $validated = $request->validate([
                 'patient_id' => 'required|exists:patients,id',
                 'appointment_id' => 'required|exists:appointment,id',
+                'register_id' => 'nullable|exists:register,id',
                 'consultation_fee' => 'required|numeric',
                 'medicine_fee' => 'required|numeric',
                 'payment_status' => 'nullable|in:paid,unpaid',
@@ -92,6 +93,7 @@ class BillController extends Controller
         $validated = $request->validate([
             'patient_id' => 'sometimes|exists:patients,id',
             'appointment_id' => 'sometimes|exists:appointment,id',
+            'register_id' => 'sometimes|exists:register,id',
             'consultation_fee' => 'sometimes|numeric',
             'medicine_fee' => 'sometimes|numeric',
             'payment_status' => 'sometimes|in:paid,unpaid',

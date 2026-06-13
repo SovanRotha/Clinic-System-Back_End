@@ -13,6 +13,7 @@ class PrescriptionModel extends Model
 
     protected $fillable = [
         'consultation_id',
+        'register_id',
         'patient_id', 
         'doctor_id',
         'medicine_name',
@@ -37,6 +38,10 @@ class PrescriptionModel extends Model
 
     public function user()
     {
-        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+        return $this->belongsTo(RegisterModel::class, 'register_id', 'id');
+    }
+    public function bill()
+    {
+        return $this->hasOne(BillModel::class, 'patient_id', 'patient_id');
     }
 }

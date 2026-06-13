@@ -44,6 +44,7 @@ class AppointmentController extends Controller
             $validated = $request->validate([
                 'patient_id' => 'required|exists:patients,id',
                 'doctor_id' => 'required|exists:doctor,id',
+                'register_id' => 'nullable|exists:register,id',
                 'appointment_date' => 'required|date',
                 'appointment_time' => 'required|date_format:H:i',
                 'reason' => 'nullable|string',
@@ -79,6 +80,7 @@ class AppointmentController extends Controller
             $validated = $request->validate([
                 'patient_id' => 'sometimes|exists:patients,id',
                 'doctor_id' => 'sometimes|exists:doctor,id',
+                'register_id' => 'sometimes|exists:register,id',
                 'appointment_date' => 'sometimes|date',
                 'appointment_time' => 'sometimes|date_format:H:i',
                 'reason' => 'nullable|string',

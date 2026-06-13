@@ -34,4 +34,19 @@ class RegisterModel extends Authenticatable
     {
         return $this->hasMany(AppointmentModel::class, 'patient_id');
     }
+    public function consultations()
+    {
+        return $this->hasMany(ConsultationModel::class, 'patient_id');
+    }
+    public function bills()
+    {
+        return $this->hasMany(BillModel::class, 'patient_id');
+    }
+    public function prescriptions()
+    {
+        return $this->hasMany(PrescriptionModel::class, 'patient_id');
+    }
+    public function appointment(){
+        return $this->hasMany(AppointmentModel::class, 'register_id');
+    }
 }

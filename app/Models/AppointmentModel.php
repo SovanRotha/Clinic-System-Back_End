@@ -13,6 +13,7 @@ class AppointmentModel extends Model
 
     protected $fillable = [
         'patient_id',
+        'register_id',
         'doctor_id',
         'appointment_date',
         'appointment_time',
@@ -36,7 +37,7 @@ class AppointmentModel extends Model
     }
     public function user()
     {
-        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+        return $this->belongsTo(RegisterModel::class, 'register_id', 'id');
     }
     public function bill()
     {

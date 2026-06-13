@@ -13,6 +13,7 @@ class ConsultationModel extends Model
 
     protected $fillable = [
         'appointment_id',
+        'register_id',
         'patient_id',
         'doctor_id',
         'symptoms',
@@ -27,7 +28,7 @@ class ConsultationModel extends Model
 
     public function user()
     {
-        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+        return $this->belongsTo(RegisterModel::class, 'register_id', 'id');
     }
     
     public function patient()
@@ -44,4 +45,9 @@ class ConsultationModel extends Model
     {
         return $this->hasMany(PrescriptionModel::class);
     }
+    public function bill()
+    {
+        return $this->hasOne(BillModel::class, 'patient_id', 'patient_id');
+    }
+    
 }

@@ -13,6 +13,7 @@ class BillModel extends Model
 
     protected $fillable = [
         'patient_id',
+        'register_id',
         'appointment_id',
         'consultation_fee',
         'medicine_fee',
@@ -31,7 +32,7 @@ class BillModel extends Model
     }
     public function user()
     {
-        return $this->belongsTo(RegisterModel::class, 'patient_id', 'id');
+        return $this->belongsTo(RegisterModel::class, 'register_id', 'id');
     }
 
 }
