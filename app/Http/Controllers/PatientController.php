@@ -20,7 +20,6 @@ class PatientController extends Controller
 
         ]);
 
-
         $patient = Patient::create([
             'user_id' => $validate['user_id'],
             'patient_code' => $validate['patient_code'],

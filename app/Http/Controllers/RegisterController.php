@@ -68,7 +68,6 @@ class RegisterController extends Controller
                     ]);
                 }
             
-            
 
             return response()->json([
                 'message' => 'register successfully',
