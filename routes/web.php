@@ -22,6 +22,7 @@ Route::get('/create-admin', function () {
         'name' => 'Admin',
         'email' => 'admin@gmail.com',
         'password' => bcrypt('1234567890'),
+        'phone'=> '1234567890',
         'role' => 'admin'
     ]);
 
