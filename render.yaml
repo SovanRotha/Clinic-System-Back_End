@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: clinic-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://clinic-backend.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: clinic-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: clinic-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: clinic-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: clinic-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: clinic-db
+          property: password
+
+  - type: psql
+    name: clinic-db
+    plan: free

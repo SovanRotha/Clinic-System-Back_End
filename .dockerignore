@@ -1,0 +1,10 @@
+.git
+.gitignore
+node_modules
+vendor
+storage/logs/*
+storage/app/*
+bootstrap/cache/*
+.env
+.env.*
+README.md
