@@ -16,3 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/create-admin', function () {
+    \App\Models\User::create([
+        'name' => 'Admin',
+        'email' => 'admin@gmail.com',
+        'password' => bcrypt('1234567890'),
+        'role' => 'admin'
+    ]);
+
+    return "Admin created successfully";
+});
